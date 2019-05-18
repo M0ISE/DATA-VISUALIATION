@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>A3-DATA-VISUALIATION</title>
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script href="code.js"></script>
+	<link rel="stylesheet" href="design.css">
+</head>
+
+<body>
+
+	<h1>A3-DATA-VISUALIATION</h1>
+
+	<div id="chart">
+		<div id="Scatter">Scatter</div>
+
+		<div id="Bars">Bars</div>
+
+		<div id="Dots">Dots</div>
+
+		<div id="tooltip" class="hidden">
+			<p id="toolTipTitle"><strong>Tooltip</strong></p>
+			<p>$<span id="value">100</span></p>
+		</div>
+	</div>
+
+	<div style="background-color: #fff0fe; padding: 10px; border-radius: 10px;">
+		<h3>Run These:</h3>
+		<ol>
+			<li><code>cd /Users/Yourname/Desktop/D3files</code></li>
+			<li><code>python -m SimpleHTTPServer 8888</code></li>
+			<li><code>http://localhost:8888/</code></li>
+		</ol>
+	</div>
+
+	<script>
+		// ---- DATA -------------------------------------------------------
+
+		// 1. Import the data
+		// Instructions for reading in data: http://learnjsdata.com/read_data.html
+
+		d3.csv("data.csv", // 1.a Connect to the data
+				function(d) {
+					return {
+						country: d.country,
+						value: +d.value,
+						space: +d.space
+					}
+
+
+					// 1.b Prepare the data
+				})
+			.then(function(dataset) { // 1.c Do stuff with the data
+
+				console.log(dataset);
+
+				// ---- VARIABLES --------------------------------------------------
+
+				// 2. Set up variables
+
+				var w = 820;
+				var h = 400;
+				var padding = 30;
+
+				// ---- SCALES AND AXES --------------------------------------------
+
+				// 3. Create scales
+
+				var xScale = d3.scaleBand()
+					// 3.a. Set the domain to the countries
+					.domain(dataset.map(
+						function(d) {
+							return d.country;
+						}
+					))
+					.rangeRound([padding, w - padding])
+					.paddingInner(0.05);
+
+				var yScale = d3.scaleLinear()
+					// 3.b. Set the domain to the values
+					.domain([0, d3.max(dataset,
+						function(d) {
+							return d.value
+						})])
+					.range([h - padding, padding]);
+
+				var zScale = d3.scaleLinear()
+					// 3.b. Set the domain to the values
+					.domain([0, d3.max(dataset,
+						function(d) {
+							return d.space
+						})])
+					.range([padding, w - padding]);
+
+				// 4. Define axes.
+
+				var xAxis = d3.axisBottom(xScale);
+				var yAxis = d3.axisLeft(yScale);
+				var zAxis = d3.axisBottom(zScale);
+
+				// ---- START BUILDING! --------------------------------------------
+
+				// 5. Create SVG and generate axes.
+
+				// 5.a. Create SVG
+				var svg = d3.select("#chart")
+					.append("svg")
+					.attr("width", w)
+					.attr("height", h);
+
+				// 5.b. Create Axes
+				svg.append("g")
+					.attr("class", "bottomAxis")
+					.attr("transform", "translate(0," + (h - padding) + ")")
+					.call(xAxis);
+				svg.append("g")
+					.attr("class", "leftAxis")
+					.attr("transform", "translate(" + padding + ",0)")
+					.call(yAxis);
+
+				// 6. Create bars
+				var bars = svg.selectAll(".bar")
+					.data(dataset)
+					.enter()
+					.append("rect")
+					.attr("class", "bar")
+					.attr("x", function(d, i) {
+						return xScale(d.country);
+					})
+					.attr("y", function(d, i) {
+						return yScale(d.value);
+					})
+					.attr("width", xScale.bandwidth())
+					.attr("height", function(d, i) {
+						return h - yScale(d.value) - padding;
+					})
+					.attr("fill", function(d, i) {
+						// 6.a. Set fill colour based on data.
+						return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
+					});
+
+				var circles = svg.selectAll("circle")
+					.data(dataset)
+					.enter()
+					.append("circle")
+					.attr("class", "circle")
+					.attr("cy", h / 2)
+					.attr("cx", w / 2)
+					.attr("r", 1);
+				//.attr("fill",  "transparent");
+
+
+				// 7. Create Labels
+
+				var labels = svg.selectAll(".label")
+					.data(dataset)
+					.enter()
+					.append("text")
+					.attr("class", "label")
+					.text(function(d, i) {
+						return +d.value
+						// 7.a. Set text value
+					})
+					.attr("x", function(d, i) {
+						return xScale(d.country) + xScale.bandwidth() / 2;
+					})
+					.attr("y", function(d, i) {
+						return yScale(d.value) + 20;
+					})
+					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-size", "16px")
+					.attr("fill", "white");
+
+				// 8. Add interactivity: Sort on click
+				var sortDirection = true;
+
+				// 8.a. Create event listener.
+				d3.select("#Scatter").on("click", function() {
+					console.log("Clicked!");
+
+					svg.select(".bottomAxis")
+						.transition("sort").duration(820)
+						.ease(d3.easeBackInOut)
+						.call(zAxis)
+
+					// 8.d. Re-set bar and label positions.
+					bars
+						.transition("barsSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("width", 10)
+						.attr("height", 10)
+						/*.attr("x", function(d) {
+							return padding + 2*d.value;
+						})
+						.attr("y", function(d) {
+							return h-(2*d.space)-padding ;
+						}) */
+						.attr("y", function(d, i) {
+							return yScale(d.value);
+						})
+						.attr("x", function(d, i) {
+							return zScale(d.space);
+						})
+						.attr("fill", function(d, i) {
+							// 6.a. Set fill colour based on data.
+							return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.space + 100) * 1.5 + ")"
+						});
+
+					svg.selectAll(".label")
+						.transition("labelSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "black")
+						.attr("text-anchor", "left")
+						.attr("font-size", "12px")
+						.text(function(d, i) {
+							return d.country + "(" + d.value + "," + d.space + ")"
+							// 7.a. Set text value
+						})
+						/*.attr("x", function(d) {
+							return padding + 2*d.value;
+						})
+						.attr("y", function(d) {
+							return h-(2*d.space)-padding ;
+						}) */
+
+						.attr("y", function(d, i) {
+							return yScale(d.value) - 2;
+						})
+						.attr("x", function(d, i) {
+							return zScale(d.space) + 12;
+						})
+
+					circles
+						.transition().duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("cy", h / 2)
+						.attr("cx", w / 2)
+						.attr("r", 1)
+
+				}) // End Scatter click function.
+
+				d3.select("#Bars").on("click", function() {
+					console.log("Clicked!");
+
+					xScale.domain(dataset.map(
+						function(d) {
+							return d.country
+						}))
+
+					// 8.c. Re-set scale and rebuild axes.
+					svg.select(".bottomAxis")
+						.transition("sort").duration(820)
+						.ease(d3.easeBackInOut)
+						.call(xAxis)
+
+					// 8.d. Re-set bar and label positions.
+					bars
+						.transition("barsSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("x", function(d, i) {
+							return xScale(d.country);
+						})
+						.attr("y", function(d, i) {
+							return yScale(d.value);
+						})
+						.attr("width", xScale.bandwidth())
+						.attr("height", function(d, i) {
+							return h - yScale(d.value) - padding;
+						})
+						.attr("fill", function(d, i) {
+							// 6.a. Set fill colour based on data.
+							return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
+						});
+
+					svg.selectAll(".label")
+						.transition("labelSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.text(function(d, i) {
+							return d.value
+							// 7.a. Set text value
+						})
+						.attr("x", function(d, i) {
+							return xScale(d.country) + xScale.bandwidth() / 2;
+						})
+						.attr("y", function(d, i) {
+							return yScale(d.value) + 15;
+						})
+						.attr("text-anchor", "middle")
+						.attr("font-family", "sans-serif")
+						.attr("font-size", "16px")
+						.attr("fill", "white");
+
+					circles
+						.transition().duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("cy", h / 2)
+						.attr("cx", w / 2)
+						.attr("r", 1)
+				})
+
+				d3.select("#Dots").on("click", function() {
+					console.log("Clicked!");
+
+					// 8.c. Re-set scale and rebuild axes.
+					svg.select(".bottomAxis")
+						.transition("sort").duration(820)
+						.ease(d3.easeBackInOut)
+						.call(zAxis)
+
+					// 8.d. Re-set bar and label positions.
+					bars
+						.transition("barsSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent")
+
+					svg.selectAll(".label")
+						.transition("labelSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent");
+
+					circles
+						.transition("barsSort").duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("cy", function(d) {
+							return yScale(d.value);
+						})
+						.attr("cx", function(d) {
+							return zScale(d.space);
+						})
+						.attr("r", function(d) {
+
+							return (d.value * d.space) / 100
+						})
+				})
+
+				// 9. Add interactivity: Tooltip on hover.
+				svg.selectAll("rect")
+					// 9.a. Create event listener for mouseover
+					.on("mouseover", function(d) {
+						console.log("hovering")
+
+						// 9.b. Set hover colour
+						d3.select(this)
+							.transition().duration(400).ease(d3.easeBackInOut)
+							.attr("fill", "rgb(255, 102, 178)") // rgb(255,255,102) rgb(255, 102, 102)
+
+						// 9.c. Calculate tooltip location
+						var xLocation = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth()
+						console.log("Attr X is: " + xLocation)
+						var yLocation = parseInt(h - d3.select(this).attr("y") / 3)
+						console.log("Attr Y is: " + yLocation)
+
+						// 9.c. Calculate tooltip location
+						d3.select("#tooltip")
+							.transition().duration(400).ease(d3.easeBackInOut)
+							.style("left", xLocation + "px")
+							.style("top", yLocation + "px")
+
+							// 9.d. Update tooltip location and value
+							.select("#toolTipTitle")
+							.text(d.country)
+							.select("#value")
+							.text(d.value)
+
+						// 9.e. Toggle tooltip on
+						d3.select("#tooltip")
+							.classed("hidden", false)
+					})
+
+					// 9.f. Create event listener for mouseout
+					.on("mouseout", function(d) {
+						//	console.log("Out")
+
+						// 9.g. Re-set non-hover colour
+						d3.select(this)
+							.transition().duration(400).ease(d3.easeBackInOut)
+							.attr("fill", function(d, i) {
+								// 6.a. Set fill colour based on data.
+								return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
+							});
+
+						// 9.h. Toggle tooltip off
+						d3.select("#tooltip")
+							.classed("hidden", true)
+					})
+
+			});
+	</script>
+
+</body>
