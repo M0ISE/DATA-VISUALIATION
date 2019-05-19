@@ -7,6 +7,9 @@
 	<script src="https://d3js.org/d3.v5.js"></script>
 	<script href="code.js"></script>
 	<link rel="stylesheet" href="design.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -14,11 +17,8 @@
 	<h1>A3-DATA-VISUALIATION</h1>
 
 	<div id="chart">
-		<div id="Scatter">Scatter</div>
-
-		<div id="Bars">Bars</div>
-
-		<div id="Dots">Dots</div>
+		<div id="Compare">Compare</div>
+		<div id="Isolate">Isolate</div>
 
 		<div id="tooltip" class="hidden">
 			<p id="toolTipTitle"><strong>Tooltip</strong></p>
@@ -45,10 +45,10 @@
 				function(d) {
 					return {
 						country: d.country,
-						value: +d.value,
-						space: +d.space
+						valA: +d.valA,
+						valB: +d.valB,
+						valC: +d.valC
 					}
-
 
 					// 1.b Prepare the data
 				})
@@ -61,8 +61,8 @@
 				// 2. Set up variables
 
 				var w = 820;
-				var h = 400;
-				var padding = 30;
+				var h = 820;
+				var padding = 50;
 
 				// ---- SCALES AND AXES --------------------------------------------
 
@@ -78,19 +78,19 @@
 					.rangeRound([padding, w - padding])
 					.paddingInner(0.05);
 
-				var yScale = d3.scaleLinear()
+				var yScale = d3.scaleBand()
 					// 3.b. Set the domain to the values
-					.domain([0, d3.max(dataset,
-						function(d) {
-							return d.value
-						})])
-					.range([h - padding, padding]);
+					.domain(dataset.map(function(d) {
+						return d.country;
+					}))
+					.rangeRound([padding, h - padding])
+					.paddingInner(0.05);
 
 				var zScale = d3.scaleLinear()
 					// 3.b. Set the domain to the values
 					.domain([0, d3.max(dataset,
 						function(d) {
-							return d.space
+							return d.valC
 						})])
 					.range([padding, w - padding]);
 
@@ -110,282 +110,283 @@
 					.attr("width", w)
 					.attr("height", h);
 
+
 				// 5.b. Create Axes
-				svg.append("g")
-					.attr("class", "bottomAxis")
-					.attr("transform", "translate(0," + (h - padding) + ")")
-					.call(xAxis);
+				//		svg.append("g")
+				//			.attr("class", "bottomAxis")
+				//			.attr("transform", "translate(0," + (h - padding) + ")")
+				//			.call(xAxis);
+
 				svg.append("g")
 					.attr("class", "leftAxis")
 					.attr("transform", "translate(" + padding + ",0)")
 					.call(yAxis);
 
-				// 6. Create bars
-				var bars = svg.selectAll(".bar")
-					.data(dataset)
-					.enter()
-					.append("rect")
-					.attr("class", "bar")
-					.attr("x", function(d, i) {
-						return xScale(d.country);
-					})
-					.attr("y", function(d, i) {
-						return yScale(d.value);
-					})
-					.attr("width", xScale.bandwidth())
-					.attr("height", function(d, i) {
-						return h - yScale(d.value) - padding;
-					})
-					.attr("fill", function(d, i) {
-						// 6.a. Set fill colour based on data.
-						return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
-					});
+				d3.select("body")
+					.style("background-color", "rgb(240,240,240)")
 
-				var circles = svg.selectAll("circle")
+				// 6. Create bars
+				var circlesOne = svg.selectAll("circles")
 					.data(dataset)
 					.enter()
 					.append("circle")
 					.attr("class", "circle")
-					.attr("cy", h / 2)
-					.attr("cx", w / 2)
-					.attr("r", 1);
-				//.attr("fill",  "transparent");
+					.attr("cy", function(d, i) {
+						return xScale(d.country) + xScale.bandwidth() / 2;
+					})
+					.attr("cx", w / 4)
+					.attr("r", function(d) {
+						return 4 * Math.sqrt((d.valA) / (2 * Math.PI))
+					})
+					.attr("fill", function(d, i) {
+						// 6.a. Set fill colour based on data.
+						return "rgba(" + 1.5 * (d.valA + 100) + "," + 0 + "," + 0 + "," + 0.5 + ")"
+					});
 
+				var circlesTwo = svg.selectAll("circlesTwo")
+					.data(dataset)
+					.enter()
+					.append("circle")
+					.attr("class", "circle")
+					.attr("cy", function(d, i) {
+						return xScale(d.country) + xScale.bandwidth() / 2;
+					})
+					.attr("cx", 2 * (w / 4))
+					.attr("r", function(d) {
+						return 4 * Math.sqrt((d.valB) / (2 * Math.PI))
+					})
+					.attr("fill", function(d, i) {
+						// 6.a. Set fill colour based on data.
+						return "rgb(" + 0 + "," + 1.5 * (d.valB + 100) + "," + 0 + "," + 0.5 + ")"
+					});
+
+				var circlesThree = svg.selectAll("circlesThree")
+					.data(dataset)
+					.enter()
+					.append("circle")
+					.attr("class", "circle")
+					.attr("cy", function(d, i) {
+						return xScale(d.country) + xScale.bandwidth() / 2;
+					})
+					.attr("cx", 3 * (w / 4))
+					.attr("r", function(d) {
+						return 4 * Math.sqrt((d.valC) / (2 * Math.PI))
+					})
+					.attr("fill", function(d, i) {
+						// 6.a. Set fill colour based on data.
+						return "rgb(" + 0 + "," + 0 + "," + 1.5 * (d.valC + 100) + "," + 0.5 + ")"
+					});
 
 				// 7. Create Labels
 
-				var labels = svg.selectAll(".label")
+				var labelsOne = svg.selectAll("labelsOne")
 					.data(dataset)
 					.enter()
 					.append("text")
 					.attr("class", "label")
 					.text(function(d, i) {
-						return +d.value
+						return d.valA
 						// 7.a. Set text value
 					})
-					.attr("x", function(d, i) {
-						return xScale(d.country) + xScale.bandwidth() / 2;
-					})
 					.attr("y", function(d, i) {
-						return yScale(d.value) + 20;
+						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
 					})
+					.attr("x", 1 * (w / 4))
+
 					.attr("text-anchor", "middle")
-					.attr("font-family", "sans-serif")
+					.attr("font-family", "IBM Plex Sans")
 					.attr("font-size", "16px")
 					.attr("fill", "white");
 
-				// 8. Add interactivity: Sort on click
-				var sortDirection = true;
+				var labelsTwo = svg.selectAll("labelsTwo")
+					.data(dataset)
+					.enter()
+					.append("text")
+					.attr("class", "label")
+					.text(function(d, i) {
+						return d.valB
+						// 7.a. Set text value
+					})
+					.attr("y", function(d, i) {
+						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
+					})
+					.attr("x", 2 * (w / 4))
 
-				// 8.a. Create event listener.
-				d3.select("#Scatter").on("click", function() {
-					console.log("Clicked!");
+					.attr("text-anchor", "middle")
+					.attr("font-family", "IBM Plex Sans")
+					.attr("font-size", "16px")
+					.attr("fill", "white");
 
-					svg.select(".bottomAxis")
-						.transition("sort").duration(820)
+				var labelsThree = svg.selectAll("labelsThree")
+					.data(dataset)
+					.enter()
+					.append("text")
+					.attr("class", "label")
+					.text(function(d, i) {
+						return d.valC
+						// 7.a. Set text value
+					})
+					.attr("y", function(d, i) {
+						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
+					})
+					.attr("x", 3 * (w / 4))
+
+					.attr("text-anchor", "middle")
+					.attr("font-family", "IBM Plex Sans")
+					.attr("font-size", "16px")
+					.attr("fill", "white");
+
+				d3.select("#Isolate").on("click", function() {
+					console.log("Clicked Isolate!");
+
+					labelsOne
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
-						.call(zAxis)
-
-					// 8.d. Re-set bar and label positions.
-					bars
-						.transition("barsSort").duration(820)
-						.ease(d3.easeBackInOut)
-						.attr("width", 10)
-						.attr("height", 10)
-						/*.attr("x", function(d) {
-							return padding + 2*d.value;
-						})
-						.attr("y", function(d) {
-							return h-(2*d.space)-padding ;
-						}) */
-						.attr("y", function(d, i) {
-							return yScale(d.value);
-						})
-						.attr("x", function(d, i) {
-							return zScale(d.space);
-						})
-						.attr("fill", function(d, i) {
-							// 6.a. Set fill colour based on data.
-							return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.space + 100) * 1.5 + ")"
-						});
-
-					svg.selectAll(".label")
-						.transition("labelSort").duration(820)
-						.ease(d3.easeBackInOut)
-						.attr("fill", "black")
-						.attr("text-anchor", "left")
-						.attr("font-size", "12px")
-						.text(function(d, i) {
-							return d.country + "(" + d.value + "," + d.space + ")"
-							// 7.a. Set text value
-						})
-						/*.attr("x", function(d) {
-							return padding + 2*d.value;
-						})
-						.attr("y", function(d) {
-							return h-(2*d.space)-padding ;
-						}) */
-
-						.attr("y", function(d, i) {
-							return yScale(d.value) - 2;
-						})
-						.attr("x", function(d, i) {
-							return zScale(d.space) + 12;
-						})
-
-					circles
-						.transition().duration(820)
-						.ease(d3.easeBackInOut)
-						.attr("cy", h / 2)
-						.attr("cx", w / 2)
-						.attr("r", 1)
-
-				}) // End Scatter click function.
-
-				d3.select("#Bars").on("click", function() {
-					console.log("Clicked!");
-
-					xScale.domain(dataset.map(
-						function(d) {
-							return d.country
-						}))
-
-					// 8.c. Re-set scale and rebuild axes.
-					svg.select(".bottomAxis")
-						.transition("sort").duration(820)
-						.ease(d3.easeBackInOut)
-						.call(xAxis)
-
-					// 8.d. Re-set bar and label positions.
-					bars
-						.transition("barsSort").duration(820)
-						.ease(d3.easeBackInOut)
-						.attr("x", function(d, i) {
-							return xScale(d.country);
-						})
-						.attr("y", function(d, i) {
-							return yScale(d.value);
-						})
-						.attr("width", xScale.bandwidth())
-						.attr("height", function(d, i) {
-							return h - yScale(d.value) - padding;
-						})
-						.attr("fill", function(d, i) {
-							// 6.a. Set fill colour based on data.
-							return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
-						});
-
-					svg.selectAll(".label")
-						.transition("labelSort").duration(820)
-						.ease(d3.easeBackInOut)
-						.text(function(d, i) {
-							return d.value
-							// 7.a. Set text value
-						})
-						.attr("x", function(d, i) {
-							return xScale(d.country) + xScale.bandwidth() / 2;
-						})
-						.attr("y", function(d, i) {
-							return yScale(d.value) + 15;
-						})
-						.attr("text-anchor", "middle")
-						.attr("font-family", "sans-serif")
-						.attr("font-size", "16px")
 						.attr("fill", "white");
 
-					circles
-						.transition().duration(820)
+					labelsTwo
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
-						.attr("cy", h / 2)
-						.attr("cx", w / 2)
-						.attr("r", 1)
-				})
+						.attr("fill", "white");
 
-				d3.select("#Dots").on("click", function() {
-					console.log("Clicked!");
-
-					// 8.c. Re-set scale and rebuild axes.
-					svg.select(".bottomAxis")
-						.transition("sort").duration(820)
+					labelsThree
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
-						.call(zAxis)
+						.attr("fill", "white");
 
-					// 8.d. Re-set bar and label positions.
-					bars
-						.transition("barsSort").duration(820)
+					circlesOne
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
-						.attr("fill", "transparent")
+						.attr("r", function(d) {
+							return 4 * Math.sqrt((d.valA) / (2 * Math.PI))
+						})
+						.attr("cx", 1*(w / 4))
 
-					svg.selectAll(".label")
-						.transition("labelSort").duration(820)
+					circlesTwo
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 4 * Math.sqrt((d.valB) / (2 * Math.PI))
+						})
+						.attr("cx", 2*(w / 4))
+
+					circlesThree
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 4 * Math.sqrt((d.valC) / (2 * Math.PI))
+						})
+						.attr("cx", 3*(w / 4))
+
+				}) // Isolate Clicked Changed
+
+				d3.select("#Compare").on("click", function() {
+					console.log("Clicked Compare!");
+
+					labelsOne
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
 						.attr("fill", "transparent");
 
-					circles
-						.transition("barsSort").duration(820)
+					labelsTwo
+						.transition()
+						.duration(820)
 						.ease(d3.easeBackInOut)
-						.attr("cy", function(d) {
-							return yScale(d.value);
-						})
-						.attr("cx", function(d) {
-							return zScale(d.space);
-						})
+						.attr("fill", "transparent");
+
+					labelsThree
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent");
+
+					circlesOne
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
 						.attr("r", function(d) {
-
-							return (d.value * d.space) / 100
+							return 6 * Math.sqrt((d.valA) / (2 * Math.PI))
 						})
-				})
+						.attr("cx", (w / 2))
 
-				// 9. Add interactivity: Tooltip on hover.
-				svg.selectAll("rect")
-					// 9.a. Create event listener for mouseover
-					.on("mouseover", function(d) {
-						console.log("hovering")
+					circlesTwo
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 6 * Math.sqrt((d.valB) / (2 * Math.PI))
+						})
+						.attr("cx", (w / 2))
 
-						// 9.b. Set hover colour
-						d3.select(this)
-							.transition().duration(400).ease(d3.easeBackInOut)
-							.attr("fill", "rgb(255, 102, 178)") // rgb(255,255,102) rgb(255, 102, 102)
+					circlesThree
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 6 * Math.sqrt((d.valC) / (2 * Math.PI))
+						})
+						.attr("cx", (w / 2))
 
-						// 9.c. Calculate tooltip location
-						var xLocation = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth()
-						console.log("Attr X is: " + xLocation)
-						var yLocation = parseInt(h - d3.select(this).attr("y") / 3)
-						console.log("Attr Y is: " + yLocation)
+				}) // Compare Clicked Changed
 
-						// 9.c. Calculate tooltip location
-						d3.select("#tooltip")
-							.transition().duration(400).ease(d3.easeBackInOut)
-							.style("left", xLocation + "px")
-							.style("top", yLocation + "px")
+				d3.select("#Australia").on("click", function() {
+					console.log("Clicked Compare!");
 
-							// 9.d. Update tooltip location and value
-							.select("#toolTipTitle")
-							.text(d.country)
-							.select("#value")
-							.text(d.value)
+					labelsOne
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent");
 
-						// 9.e. Toggle tooltip on
-						d3.select("#tooltip")
-							.classed("hidden", false)
-					})
+					labelsTwo
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent");
 
-					// 9.f. Create event listener for mouseout
-					.on("mouseout", function(d) {
-						//	console.log("Out")
+					labelsThree
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("fill", "transparent");
 
-						// 9.g. Re-set non-hover colour
-						d3.select(this)
-							.transition().duration(400).ease(d3.easeBackInOut)
-							.attr("fill", function(d, i) {
-								// 6.a. Set fill colour based on data.
-								return "rgb(" + (255 - (d.value + 100.12343)) + "," + (d.value + 100) + 25 + "," + (d.value + 100) * 1.5 + ")"
-							});
+					circlesOne
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 6 * Math.sqrt((d.valA) / (2 * Math.PI))
+						})
+						.attr("cx", (w / 2))
 
-						// 9.h. Toggle tooltip off
-						d3.select("#tooltip")
-							.classed("hidden", true)
-					})
+					circlesTwo
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 6 * Math.sqrt((d.valB) / (2 * Math.PI))
+						})
+						.attr("cx", (w / 2))
+
+					circlesThree
+						.transition()
+						.duration(820)
+						.ease(d3.easeBackInOut)
+						.attr("r", function(d) {
+							return 6 * Math.sqrt((d.valC) / (2 * Math.PI))
+						})
+						.attr("cx", (w / 2))
+
+				}) // Compare Clicked Changed
+
+
 
 			});
 	</script>
