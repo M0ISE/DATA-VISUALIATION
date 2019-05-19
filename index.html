@@ -8,6 +8,11 @@
 	<script href="code.js"></script>
 	<link rel="stylesheet" href="design.css">
 
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+
 	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i&display=swap" rel="stylesheet">
 
 </head>
@@ -24,6 +29,10 @@
 			<p id="toolTipTitle"><strong>Tooltip</strong></p>
 			<p>$<span id="value">100</span></p>
 		</div>
+	</div>
+
+	<div id="TheButtons">
+
 	</div>
 
 	<div style="background-color: #fff0fe; padding: 10px; border-radius: 10px;">
@@ -60,9 +69,9 @@
 
 				// 2. Set up variables
 
-				var w = 820;
+				var w = 500;
 				var h = 820;
-				var padding = 50;
+				var padding = 60;
 
 				// ---- SCALES AND AXES --------------------------------------------
 
@@ -122,6 +131,34 @@
 					.attr("transform", "translate(" + padding + ",0)")
 					.call(yAxis);
 
+
+				//.attr("class","some_other_id")
+
+
+				for (var i = 0; i < d3.selectAll(dataset).size(); i++) {
+					var Button = d3.select("#TheButtons")
+					d3.select("#TheButtons")
+						.append("button")
+						.attr("type", "button")
+						.attr("class", "btn-btn")
+						.attr("id", function(d) {
+							return 'button ' + i;
+						})
+						.append("div")
+						.attr("class", "label")
+						.text(function(d) {
+							return  " ";
+						})
+						.selectAll('button')
+						.data(dataset)
+						.enter()
+						.append('option')
+						.text(function(d, i) {
+							return d.country;
+						})
+
+				}
+
 				d3.select("body")
 					.style("background-color", "rgb(240,240,240)")
 
@@ -132,7 +169,7 @@
 					.append("circle")
 					.attr("class", "circle")
 					.attr("cy", function(d, i) {
-						return xScale(d.country) + xScale.bandwidth() / 2;
+						return yScale(d.country) + yScale.bandwidth() / 2;
 					})
 					.attr("cx", w / 4)
 					.attr("r", function(d) {
@@ -149,7 +186,7 @@
 					.append("circle")
 					.attr("class", "circle")
 					.attr("cy", function(d, i) {
-						return xScale(d.country) + xScale.bandwidth() / 2;
+						return yScale(d.country) + yScale.bandwidth() / 2;
 					})
 					.attr("cx", 2 * (w / 4))
 					.attr("r", function(d) {
@@ -166,7 +203,7 @@
 					.append("circle")
 					.attr("class", "circle")
 					.attr("cy", function(d, i) {
-						return xScale(d.country) + xScale.bandwidth() / 2;
+						return yScale(d.country) + yScale.bandwidth() / 2;
 					})
 					.attr("cx", 3 * (w / 4))
 					.attr("r", function(d) {
@@ -189,7 +226,7 @@
 						// 7.a. Set text value
 					})
 					.attr("y", function(d, i) {
-						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
+						return yScale(d.country) + 6 + yScale.bandwidth() / 2;
 					})
 					.attr("x", 1 * (w / 4))
 
@@ -208,7 +245,7 @@
 						// 7.a. Set text value
 					})
 					.attr("y", function(d, i) {
-						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
+						return yScale(d.country) + 6 + yScale.bandwidth() / 2;
 					})
 					.attr("x", 2 * (w / 4))
 
@@ -227,7 +264,7 @@
 						// 7.a. Set text value
 					})
 					.attr("y", function(d, i) {
-						return xScale(d.country) + 6 + xScale.bandwidth() / 2;
+						return yScale(d.country) + 6 + yScale.bandwidth() / 2;
 					})
 					.attr("x", 3 * (w / 4))
 
@@ -264,7 +301,7 @@
 						.attr("r", function(d) {
 							return 4 * Math.sqrt((d.valA) / (2 * Math.PI))
 						})
-						.attr("cx", 1*(w / 4))
+						.attr("cx", 1 * (w / 4))
 
 					circlesTwo
 						.transition()
@@ -273,7 +310,7 @@
 						.attr("r", function(d) {
 							return 4 * Math.sqrt((d.valB) / (2 * Math.PI))
 						})
-						.attr("cx", 2*(w / 4))
+						.attr("cx", 2 * (w / 4))
 
 					circlesThree
 						.transition()
@@ -282,7 +319,7 @@
 						.attr("r", function(d) {
 							return 4 * Math.sqrt((d.valC) / (2 * Math.PI))
 						})
-						.attr("cx", 3*(w / 4))
+						.attr("cx", 3 * (w / 4))
 
 				}) // Isolate Clicked Changed
 
