@@ -16,6 +16,8 @@
 
 	<h1>A3-DATA-VISUALIATION</h1>
 
+	<div id="TheButtons"></div>
+
 	<div id="chart">
 		<div id="Compare">Compare</div>
 		<div id="Isolate">Isolate</div>
@@ -26,11 +28,11 @@
 		</div>
 	</div>
 
-	<div id="TheButtons">
-
-
-
-
+	<div>
+		<h2 id="sliderData">2005</h2>
+	</div>
+	<div>
+		<input type="range" min="1" max="3" value="2" step="1" class="slider" id="slider">
 	</div>
 
 	<div style="background-color: #fff0fe; padding: 10px; border-radius: 10px;">
@@ -48,7 +50,9 @@
 		// 1. Import the data
 		// Instructions for reading in data: http://learnjsdata.com/read_data.html
 
-		d3.csv("data.csv", // 1.a Connect to the data
+
+
+		d3.csv("data1.csv", // 1.a Connect to the data
 				function(d) {
 					return {
 						country: d.country,
@@ -56,8 +60,6 @@
 						valB: +d.valB,
 						valC: +d.valC
 					}
-
-					// 1.b Prepare the data
 				})
 			.then(function(dataset) { // 1.c Do stuff with the data
 
@@ -130,9 +132,7 @@
 					.call(yAxis);
 
 
-				//.attr("class","some_other_id")
-
-
+				// Button bars at the top
 				for (var i = 0; i < d3.selectAll(dataset).size(); i++) {
 					var Button = d3.select("#TheButtons")
 					d3.select("#TheButtons")
@@ -146,6 +146,20 @@
 							return dataset[i].country;
 						})
 				}
+
+				function updateSliderText() {
+					document.getElementById('sliderData').innerHTML = document.getElementById("slider").value;
+
+					//console.log("updateSliderText has Run!");
+					//console.log("Slider value" + document.getElementById("slider").value);
+				}
+
+				d3.select("#slider").on("change", function() {
+					console.log("Slider updated!");
+
+					updateSliderText()
+
+				})
 
 				d3.select("body")
 					.style("background-color", "rgb(240,240,240)")
