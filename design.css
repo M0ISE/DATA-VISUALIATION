@@ -1,35 +1,20 @@
-body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  margin: auto;
-  padding-top: 50px;
-  position: relative;
-  width: 1000px;
+#reset, #IncomeBracket, #TopCountries, #Bar {
+  display: inline-block;
+  background-color: white;
+  color: black;
+  padding-left: 32px;
+  padding-right: 32px;
+    -webkit-transition-duration: 0.4s;
+  transition-duration: 0.7s;
 }
 
-#less {
-  color: #e3876e;
-  cursor: pointer;
-  padding: 3px;
-  font-weight: bold;
-  padding-right: 20px;
+#reset:hover, #IncomeBracket:hover, #TopCountries:hover, #Bar:hover {
+  background-color: #4CAF50;
+  /* Green */
+  color: white;
 }
 
-#more {
-  color: #89e36e;
-  cursor: pointer;
-  padding: 3px;
-  font-weight: bold;
-  padding-right: 20px;
-}
 
-#there {
-  text-align: right;
-  color: #3f423e;
-  cursor: pointer;
-  padding: 3px;
-  font-weight: bold;
-  padding-right: 20px;
-}
 
 #HoverInfo {
   text-align: left;
@@ -39,12 +24,14 @@ body {
   cursor: pointer;
 }
 
-a {}
-
-a:hover {
-  cursor: pointer;
-}
-
 #content {
   position: relative;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  padding-top: 50px;
+  position: relative;
+  width: 1000px;
 }
