@@ -32,10 +32,17 @@ body {
 }
 
 #HoverInfo {
-  text-align: middle;
-  color: #3f423e;
-  padding: 3px;
+  text-align: left;
+  color: #242424;
+  padding: 32px;
   font-weight: bold;
+  cursor: pointer;
+}
+
+a {}
+
+a:hover {
+  cursor: pointer;
 }
 
 #content {

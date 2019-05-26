@@ -5,12 +5,12 @@
 
   <title>A3-DATA-VISUALIATION</title>
 
-	<script src="https://d3js.org/d3.v5.js"></script>
-	<link rel="stylesheet" href="design.css">
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <link rel="stylesheet" href="design.css">
 
-	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i&display=swap" rel="stylesheet">
 
-	<link rel="icon" type="image/png" href="favicon.png">
+  <link rel="icon" type="image/png" href="favicon.png">
 
 </head>
 
@@ -18,31 +18,28 @@
 
   <h1>Here there be Circles</h1>
 
-  <div id="MajorFilters">
-    <span>
-      <label><input id="Home" type="button" name="grouping" value="Home"></label>
-      <label><input id="EcoLoss" type="radio" name="grouping" value="Economic Loss" checked>Economic Loss</label>
-      <label><input id="HumanLoss" type="radio" name="grouping" value="Human Loss">Human Loss</label>
-
-    </span>
-  </div>
 
   <div id="MinorFilter">
-    <span>
+    <id = "Controls" span>
       <p>Group: </p>
+      <label><input id="reset" type="button" name="grouping" value="Reset"></label>
       <label><input id="IncomeBracket" type="button" name="grouping" value="Income Bracket"></label>
       <label><input id="TopCountries" type="button" name="grouping" value="Top Countries"></label>
-      <label><input id="None" type="button" name="grouping" value="None"></label>
       <label><input id="Bar" type="button" name="grouping" value="Bar"></label>
-
     </span>
   </div>
 
-  <div id="content"></div>
+  <h2>Ecconomic Loss from Natral Disasters</h2>
+  <div id="EcoContent"></div>
+  <h3 id="HoverInfo"> </h3>
 
-  <span>
-    <h3 id="HoverInfo"></h3>
-  </span>
+  <h2>Deaths from Natral Disasters</h2>
+  <div id="HumanContent"></div>
+  <h3 id="HoverInfo2"> </h3>
+
+  <h2>More data on each country</h2>
+  <div id="BarContent"></div>
+  <h3 id="HoverInfo3"> </h3>
 
   <script src="hopefullyWorkingCode.js"></script>
 
