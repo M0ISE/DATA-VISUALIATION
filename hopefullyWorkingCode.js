@@ -3,7 +3,7 @@ d3.csv("data.csv", // 1.a Connect to the data
       return {
         Country: d.Country,
         Income: +d.Income,
-        EcoLoss: +d.EcoLoss * 100000,
+        EcoLoss: +d.EcoLoss * 50000,
         HumanLoss: +d.HumanLoss * 100,
         EcoTop: +d.EcoTop,
         HumanTop: +d.HumanTop,
@@ -78,13 +78,17 @@ d3.csv("data.csv", // 1.a Connect to the data
         .data(dataset)
         .enter()
         .append("circle")
+        .classed(" ", true)
         .attr("class", "Eco")
         .attr("id", function(d) {
           return d.Income;
         })
         .attr("r", function(d) {
           if (d.EcoLoss == "0") {
-            return Math.sqrt(100 / Math.PI);
+            var dataMean = d3.mean(dataset, function(d) {
+              return d.EcoLoss;
+            });
+            return Math.sqrt(dataMean / Math.PI);
           } else {
             return Math.sqrt(d.EcoLoss / Math.PI);
           }
@@ -123,7 +127,10 @@ d3.csv("data.csv", // 1.a Connect to the data
         })
         .attr("r", function(d) {
           if (d.HumanLoss <= 0) {
-            return Math.sqrt(100 / Math.PI);
+            var dataMean = d3.mean(dataset, function(d) {
+              return d.HumanLoss;
+            });
+            return Math.sqrt(dataMean / Math.PI);
           } else {
             return Math.sqrt(d.HumanLoss / Math.PI);
           }
@@ -236,7 +243,6 @@ d3.csv("data.csv", // 1.a Connect to the data
         };
 
         function incomeBracketForceX(d) {
-          console.log(d.Income);
           if (d.Income == "0") {
             return lowX(width);
           } else if (d.Income == "1") {
@@ -248,11 +254,9 @@ d3.csv("data.csv", // 1.a Connect to the data
           } else {
             return 20 * Math.random();
           }
-
         }
 
         function incomeBracketForceY(d) {
-          console.log(d.Income);
           if (d.Income == "0") {
             return lowY(height);
           } else if (d.Income == "1") {
@@ -279,23 +283,23 @@ d3.csv("data.csv", // 1.a Connect to the data
         }
 
         function noDataY(dimension) {
-          return dimension * (2 / 3);
+          return dimension - paddingChart;
         }
 
         function lowX(dimension) {
-          return dimension * (1 / 3);
+          return paddingChart;
         }
 
         function middleX(dimension) {
-          return dimension * (2 / 3);
+          return dimension * (1 / 2);
         }
 
         function heighX(dimension) {
-          return dimension * (3 / 3);
+          return dimension - paddingChart;
         }
 
         function noDataX(dimension) {
-          return dimension * (3 / 3);
+          return dimension - paddingChart;
         }
       }
 
@@ -449,7 +453,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
     function forceCollideEco(d) {
       if (d.EcoLoss <= 0) {
-        return Math.sqrt(100 / Math.PI);
+        var dataMean = d3.mean(dataset, function(d) {
+          return d.EcoLoss;
+        });
+        return Math.sqrt(dataMean / Math.PI);
       } else {
         return Math.sqrt(d.EcoLoss / Math.PI) + 2;
       }
@@ -458,7 +465,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
     function forceCollideHuman(d) {
       if (d.HumanLoss <= 0) {
-        return Math.sqrt(100 / Math.PI);
+        var dataMean = d3.mean(dataset, function(d) {
+          return d.HumanLoss;
+        });
+        return Math.sqrt(dataMean / Math.PI);
       } else {
         return Math.sqrt(d.HumanLoss / Math.PI) + 2;
       }
