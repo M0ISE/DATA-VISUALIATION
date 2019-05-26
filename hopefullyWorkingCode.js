@@ -24,16 +24,16 @@ d3.csv("data.csv", // 1.a Connect to the data
       scale = 3;
 
     var greenColors = [
-      "rgba(25,164,86,0.3)",
-      "rgba(25,164,86,0.6)",
-      "rgba(25,164,86,0.9)",
+      "rgba(72,224,154,0.3)",
+      "rgba(72,224,154,0.6)",
+      "rgba(72,224,154,0.9)",
       "rgba(0, 0, 0, 0.4)"
     ];
 
     var redColors = [
-      "rgba(164,58,25,0.3)",
-      "rgba(164,58,25,0.6)",
-      "rgba(164,58,25,0.9)",
+      "rgba(229,16,62,0.3)",
+      "rgba(229,16,62,0.6)",
+      "rgba(229,16,62,0.9)",
       "rgba(0, 0, 0, 0.4)"
     ];
 
@@ -100,7 +100,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         })
         .on("mouseover", function(d) {
           console.log(d.Country);
-          updateCountryInfo(d.Country + " had " + d3.format(".2s")(d.EcoLoss) + " USD Losses from natural disasters");
+          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.EcoLoss * 1000000) + " USD Losses from natural disasters");
         })
         .on("mouseout", function(d) {
           updateCountryInfo("...");
@@ -136,15 +136,11 @@ d3.csv("data.csv", // 1.a Connect to the data
           }
         })
         .attr("fill", function(d) {
-          if (d.EcoLoss == "0" || "") {
-            return "rgba(0, 0, 0, 0.2)";
-          } else {
-            return redColors[d.Income];
-          }
+          return redColors[d.Income];
         })
         .on("mouseover", function(d) {
           console.log(d.Country);
-          updateCountryInfo(d.Country + " had " + d3.format(".2s")(d.HumanLoss) + " deaths from natural disasters");
+          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.HumanLoss * 1000000) + " deaths from natural disasters");
         })
         .on("mouseout", function(d) {
           updateCountryInfo("...");
@@ -224,65 +220,37 @@ d3.csv("data.csv", // 1.a Connect to the data
       }
 
       function sortIncomeBracketForce() {
-        var sortIncomeBracketStrength = 0.05;
+        var sortIncomeBracketStrength = 0.03;
         return {
           x: d3.forceX(incomeBracketForceX).strength(sortIncomeBracketStrength),
           y: d3.forceY(incomeBracketForceY).strength(sortIncomeBracketStrength)
         };
 
         function incomeBracketForceX(d) {
-          if ((d.EcoLoss == "0" || d.HumanLoss == "0") > 0) {
-            if ((d.Income == "3")) {
-              return noDataY(width);
-            } else if (d.Income == "0") {
-              return lowY(width);
-            } else if (d.Income == "1") {
-              return middleY(width);
-            } else if (d.Income == "2") {
-              return heighY(width);
-            } else {
-              return 20 * Math.random();
-            }
+          if (d.Income == "0") {
+            return lowX(width);
+          } else if (d.Income == "1") {
+            return middleX(width);
+          } else if (d.Income == "2") {
+            return heighX(width);
+          } else if ((d.Income == "3")) {
+            return noDataX(width);
           } else {
-            if (d.Income == "3" || (d.EcoLoss == "0" || d.HumanLoss == "0")) {
-              return noDataX(width);
-            } else if (d.Income == "0") {
-              return lowX(width);
-            } else if (d.Income == "1") {
-              return middleX(width);
-            } else if (d.Income == "2") {
-              return heighX(width);
-            } else {
-              return 20 * Math.random();
-            }
+            return 20 * Math.random();
           }
         }
 
         function incomeBracketForceY(d) {
-          if ((d.EcoLoss == "0" || d.HumanLoss == "0") > 0) {
-            if ((d.Income == "3")) {
-              return noDataY(height);
-            } else if (d.Income == "0") {
-              return lowY(height);
-            } else if (d.Income == "1") {
-              return middleY(height);
-            } else if (d.Income == "2") {
-              return heighY(height);
-            } else {
-              return 20 * Math.random();
-            }
+          if (d.Income == "0") {
+            return lowY(height);
+          } else if (d.Income == "1") {
+            return middleY(height);
+          } else if (d.Income == "2") {
+            return heighY(height);
+          } else if ((d.Income == "3")) {
+            return noDataY(height);
           } else {
-            if (d.Income == "3" || (d.EcoLoss == "0" || d.HumanLoss == "0")) {
-              return noDataX(width);
-            } else if (d.Income == "0") {
-              return lowX(width);
-            } else if (d.Income == "1") {
-              return middleX(width);
-            } else if (d.Income == "2") {
-              return heighX(width);
-            } else {
-              return 20 * Math.random();
-            }
+            return 20 * Math.random();
           }
         }
 
@@ -469,8 +437,8 @@ d3.csv("data.csv", // 1.a Connect to the data
       updateEcoForces(forces.barScatter);
 
       bars
-        //.transition().duration(420)
-        //.ease(d3.easeBackInOut)
+        .transition().duration(420)
+        .ease(d3.easeBackInOut)
         .attr("fill", "rgba(209, 238, 27, 0.6)");
 
       graphLabels
@@ -528,15 +496,13 @@ d3.csv("data.csv", // 1.a Connect to the data
       .append("text")
       .attr("class", "label")
       .text(function(d, i) {
-        return d3.format(",.2r")(d.EcoLoss);
+        return d3.format(",.3r")(d.EcoLoss);
         // 7.a. Set text economic
       })
       .attr("x", -10)
       .attr("y", function(d, i) {
         return yScale(d.EcoLoss) + 20;
-      })
-  ////     .attr("text-anchor", "middle")
-  //    .attr("font-family", "sans-serif")
-  //    .attr("font-size", "10px");
-////
+      });
+
+
   });
