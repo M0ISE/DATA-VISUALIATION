@@ -310,67 +310,19 @@ d3.csv("data.csv", // 1.a Connect to the data
         };
 
         function TopCountriesForceX(d) {
-          if (document.getElementById("EcoLoss").checked == true) {
-            if (d.EcoLoss == 0) {
-              if (d.top > 1) {
-                return width / 2;
-              } else {
-                return width * 20 * Math.random();
-              }
-            } else {
-              return width * 20 * Math.random();
-            }
-          } /* END of if */
-          else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.HumanLoss == 1) {
-              if (d.top > 1) {
-                return width / 2;
-              } else {
-                return width * 20 * Math.random();
-              }
-            } else {
-              return width * 20 * Math.random();
-            }
-          } /* END of Else if */
-          else {
-            if (d.top > 1) {
-              return width / 2;
-            } else {
-              return width * 20 * Math.random();
-            }
-          } /* END of Else */
+          if (d.EcoTop || d.HumanTop >= 1) {
+            return width / 2;
+          } else {
+            return width * 20 * Math.random();
+          }
         }
 
         function TopCountriesForceY(d) {
-          if (document.getElementById("EcoLoss").checked == true) {
-            if (d.EcoLoss == 0) {
-              if (d.top > 1) {
-                return height / 2;
-              } else {
-                return height * 20 * Math.random();
-              }
-            } else {
-              return height * 20 * Math.random();
-            }
-          } /* END of if */
-          else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.HumanLoss == 1) {
-              if (d.top > 1) {
-                return height / 2;
-              } else {
-                return height * 20 * Math.random();
-              }
-            } else {
-              return height * 20 * Math.random();
-            }
-          } /* END of Else if */
-          else {
-            if (d.top > 1) {
-              return height / 2;
-            } else {
-              return height * 20 * Math.random();
-            }
-          } /* END of Else */
+          if (d.EcoTop || d.HumanTop >= 1) {
+            return height / 2;
+          } else {
+            return height * 20 * Math.random();
+          }
         }
       }
     }
