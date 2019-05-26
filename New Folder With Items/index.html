@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>A3-DATA-VISUALIATION</title>
+
+	<script src="https://d3js.org/d3.v5.js"></script>
+	<script src="code.js"></script>
+
+	<link rel="stylesheet" href="design.css">
+
+	<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,400i|IBM+Plex+Sans+Condensed:400,400i|IBM+Plex+Sans:100,100i,400,400i,700,700i|IBM+Plex+Serif:400,400i&display=swap" rel="stylesheet">
+
+	<link rel="icon" type="image/png" href="favicon.png">
+
+
+</head>
+
+<body>
+
+	<h1>A3-DATA-VISUALIATION</h1>
+
+
+
+	<div id="chart">
+		<div id="Compare">Compare</div>
+		<div id="Isolate">Isolate</div>
+
+		<div id="tooltip" class="hidden">
+			<p id="toolTipTitle"><strong>Tooltip</strong></p>
+			<p>$<span id="value">100</span></p>
+		</div>
+	</div>
+
+	<div>
+		<h2 id="sliderData">2005</h2>
+		<input type="range" min="1" max="3" value="2" step="1" class="slider" id="slider">
+	</div>
+
+
+</body>
+</html>
