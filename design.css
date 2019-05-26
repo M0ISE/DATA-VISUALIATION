@@ -4,22 +4,22 @@
   color: black;
   padding-left: 32px;
   padding-right: 32px;
-    -webkit-transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
   transition-duration: 0.7s;
 }
 
 #reset:hover, #IncomeBracket:hover, #TopCountries:hover, #Bar:hover {
-  background-color: #4CAF50;
-  /* Green */
+  background-color: #c4c4c4;
   color: white;
 }
 
-#HoverInfo {
-  text-align: left;
-  color: #242424;
+#HoverInfo, #HoverInfo2, #HoverInfo3 {
+  text-align: middle;
+  color: white;
   padding: 32px;
-  font-weight: bold;
   cursor: pointer;
+  background-color: #c4c4c4;
+  font-weight: 700;
 }
 
 #content {
@@ -27,9 +27,17 @@
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: auto;
   padding-top: 50px;
   position: relative;
   width: 1000px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+#footer {
+  position: static;
+  width: 100%;
+  background-color: #c4c4c4;
+  color: white;
+  text-align: left;
 }

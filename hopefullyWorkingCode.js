@@ -103,7 +103,7 @@ d3.csv("data.csv", // 1.a Connect to the data
           updateCountryInfo(d.Country + " had " + d3.format(".2s")(d.EcoLoss) + " USD Losses from natural disasters");
         })
         .on("mouseout", function(d) {
-          updateCountryInfo(".");
+          updateCountryInfo("...");
         });
 
       function updateCountryInfo(number) {
@@ -147,7 +147,7 @@ d3.csv("data.csv", // 1.a Connect to the data
           updateCountryInfo(d.Country + " had " + d3.format(".2s")(d.HumanLoss) + " deaths from natural disasters");
         })
         .on("mouseout", function(d) {
-          updateCountryInfo(".");
+          updateCountryInfo("...");
         });
 
       function updateCountryInfo(number) {
@@ -535,8 +535,8 @@ d3.csv("data.csv", // 1.a Connect to the data
       .attr("y", function(d, i) {
         return yScale(d.EcoLoss) + 20;
       })
-      .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
-      .attr("font-size", "10px");
-
+  ////     .attr("text-anchor", "middle")
+  //    .attr("font-family", "sans-serif")
+  //    .attr("font-size", "10px");
+////
   });
