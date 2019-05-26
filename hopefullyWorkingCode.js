@@ -3,27 +3,12 @@ d3.csv("data.csv", // 1.a Connect to the data
       return {
         Country: d.Country,
         Income: +d.Income,
-        EcoLoss: +d.EcoLoss * 10000,
+        EcoLoss: +d.EcoLoss * 100000,
         HumanLoss: +d.HumanLoss * 100,
         EcoTop: +d.EcoTop,
         HumanTop: +d.HumanTop,
         type: 0
       };
-
-      //    var numNodes = 68;
-      //    var nodes = d3.range(numNodes).map(function(d, i) {
-      //      return {
-      //        radius: Math.random() * 22,
-      //        category: i % scale,
-      //        top: i % 3,
-      //        income: i % 3,
-      //        name: i % 8,
-      //        type: i % 2,
-      //        years: i & 12
-      //      };
-      //    });
-
-      // 1.b Prepare the data
     })
   .then(function(dataset) { // 1.c Do stuff with the data
 
@@ -53,15 +38,26 @@ d3.csv("data.csv", // 1.a Connect to the data
     ];
 
     var forces,
-      forceSimulation;
+      forceSimulation,
+      forceSimulationEco,
+      forceSimulationHuman;
 
     createSVG();
-    makeTheEcoCircles();
-    makeTheHumanCircles();
     mayTheForceBe();
+
+    makeTheEcoCircles();
     createForceSimulationEco();
-    createForceSimulationHuman();
+    //  makeTheHumanCircles();
+    //  createForceSimulationHuman();
+
+    //  if (document.getElementById("EcoLoss").checked == true) {  } else {  }
+
     addGroupingListeners();
+    //createSVG2();
+
+    //mayTheForceBe();
+
+    //  addGroupingListeners();
 
     function createSVG() {
       svg = d3.select("#content")
@@ -70,22 +66,31 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("height", height + paddingLarge);
     }
 
+    function createSVG2() {
+      svg = d3.select("#content")
+        .append("svg")
+        .attr("width", width + paddingLarge)
+        .attr("height", height + paddingLarge);
+    }
+
     function makeTheEcoCircles() {
-      //  var formatPopulation = d3.format(",");
-      circlesEco = svg.selectAll("circleEco")
+      circlesEco = svg.selectAll("Eco")
         .data(dataset)
         .enter()
         .append("circle")
-        .attr("class", "ECO")
+        .attr("class", "Eco")
+        .attr("id", function(d) {
+          return d.Income;
+        })
         .attr("r", function(d) {
-          if (d.EcoLoss <= 0) {
-            return Math.sqrt(50 / Math.PI);
+          if (d.EcoLoss == "0") {
+            return Math.sqrt(100 / Math.PI);
           } else {
             return Math.sqrt(d.EcoLoss / Math.PI);
           }
         })
         .attr("fill", function(d) {
-          if (d.EcoLoss <= 0) {
+          if (d.EcoLoss == "3") {
             return "rgba(0, 0, 0, 0.2)";
           } else {
             return greenColors[d.Income];
@@ -108,12 +113,14 @@ d3.csv("data.csv", // 1.a Connect to the data
     }
 
     function makeTheHumanCircles() {
-
-      circlesHuman = svg.selectAll("circleHuman")
+      circlesHuman = svg.selectAll("Human")
         .data(dataset)
         .enter()
         .append("circle")
-        .attr("class", "ECO")
+        .attr("class", "Human")
+        .attr("id", function(d) {
+          return d.Income;
+        })
         .attr("r", function(d) {
           if (d.HumanLoss <= 0) {
             return Math.sqrt(100 / Math.PI);
@@ -144,7 +151,6 @@ d3.csv("data.csv", // 1.a Connect to the data
       }
     }
 
-
     function mayTheForceBe() {
       var forceStrength = 0.05;
 
@@ -170,37 +176,37 @@ d3.csv("data.csv", // 1.a Connect to the data
 
         function centerForceX(d) {
           if (document.getElementById("EcoLoss").checked == true) {
-            if (d.EcoLoss == 0) {
-              return width / 2;
-            } else {
+            if (this.className == "Eco") {
+              console.log(this.className);
               return width * 2;
-            }
-          } else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.HumanLoss == 1) {
-              return width / 2;
             } else {
-              return width * 2;
+              return width / 2;
             }
+
           } else {
-            return width / 2;
+            if (this.className == "Eco") {
+              return width * 2;
+            } else {
+              return width / 2;
+            }
           }
         }
 
         function centerForceY(d) {
           if (document.getElementById("EcoLoss").checked == true) {
-            if (d.Income == 0) {
-              return height / 2;
-            } else {
+            if (this.className == "Eco") {
+              console.log(this.className);
               return height * 2;
-            }
-          } else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.Income == 1) {
-              return height / 2;
             } else {
-              return height * 2;
+              return height / 2;
             }
+
           } else {
-            return height / 2;
+            if (this.className == "Eco") {
+              return height * 2;
+            } else {
+              return height / 2;
+            }
           }
         }
 
@@ -223,137 +229,80 @@ d3.csv("data.csv", // 1.a Connect to the data
       }
 
       function sortIncomeBracketForce() {
+        var sortIncomeBracketStrength = 0.1;
         return {
-          x: d3.forceX(incomeBracketForceX).strength(forceStrength),
-          y: d3.forceY(incomeBracketForceY).strength(forceStrength)
+          x: d3.forceX(incomeBracketForceX).strength(sortIncomeBracketStrength),
+          y: d3.forceY(incomeBracketForceY).strength(sortIncomeBracketStrength)
         };
 
         function incomeBracketForceX(d) {
-          if (document.getElementById("EcoLoss").checked == true) {
-            if (d.EcoLoss == 0) {
-              if (d.income == "0") {
-                return left(width);
-              } else if (d.income == 1) {
-                return center(width);
-              } else if (d.income == 2) {
-                return right(width);
-              } else {
-                return width * 20 * Math.random();
-              }
-            } /* END of (d.type == 0) */
-            else {
-              return width * 20 * Math.random();
-            }
-          } /* END of if */
-          else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.HumanLoss == 1) {
-              if (d.income == "0") {
-                return left(width);
-              } else if (d.income == 1) {
-                return center(width);
-              } else if (d.income == 2) {
-                return right(width);
-              } else {
-                return width * 20 * Math.random();
-              }
-            } /* END of (d.type == 1) */
-            else {
-              return width * 20 * Math.random();
-            }
-          } /* END of Else if */
-          else {
-            if (d.income == "0") {
-              return left(width);
-            } else if (d.income == 1) {
-              return center(width);
-            } else if (d.income == 2) {
-              return right(width);
-            } else {
-              return width * 20 * Math.random();
-            }
-          } /* END of Else */
+          console.log(d.Income);
+          if (d.Income == "0") {
+            return lowX(width);
+          } else if (d.Income == "1") {
+            return middleX(width);
+          } else if (d.Income == "2") {
+            return heighX(width);
+          } else if (d.Income == "3") {
+            return noDataX(width);
+          } else {
+            return 20 * Math.random();
+          }
+
         }
 
         function incomeBracketForceY(d) {
-          if (document.getElementById("EcoLoss").checked == true) {
-            if (d.EcoLoss == 0) {
-              if (d.income == 0) {
-                return top(height);
-              } else if (d.income == 1) {
-                return middle(height);
-              } else if (d.income == 2) {
-                return bottom(height);
-              } else {
-                return height * 20 * Math.random();
-              }
-            } /* END of (d.type == 0) */
-            else {
-              return height * 20 * Math.random();
-            }
-          } /* END of if */
-          else if (document.getElementById("HumanLoss").checked == true) {
-            if (d.HumanLoss == 1) {
-              if (d.income == 0) {
-                return top(height);
-              } else if (d.income == 1) {
-                return middle(height);
-              } else if (d.income == 2) {
-                return bottom(height);
-              } else {
-                return height * 20 * Math.random();
-              }
-            } /* END of (d.type == 1) */
-            else {
-              return height * 20 * Math.random();
-            }
-          } /* END of Else if */
-          else {
-            if (d.income == 0) {
-              return top(height);
-            } else if (d.income == 1) {
-              return middle(height);
-            } else if (d.income == 2) {
-              return bottom(height);
-            } else {
-              return height * 20 * Math.random();
-            }
-          } /* END of Else */
+          console.log(d.Income);
+          if (d.Income == "0") {
+            return lowY(height);
+          } else if (d.Income == "1") {
+            return middleY(height);
+          } else if (d.Income == "2") {
+            return heighY(height);
+          } else if (d.Income == "3") {
+            return noDataY(height);
+          } else {
+            return 20 * Math.random();
+          }
         }
 
-        function left(dimension) {
-          return dimension / 6;
+        function lowY(dimension) {
+          return dimension * (1 / 2);
         }
 
-        function center(dimension) {
-          return dimension / 2;
+        function middleY(dimension) {
+          return dimension * (1 / 2);
         }
 
-        function right(dimension) {
-          return (dimension / 6) * 5;
+        function heighY(dimension) {
+          return dimension * (1 / 2);
         }
 
-        function top(dimension) {
-          return (dimension) / 2;
+        function noDataY(dimension) {
+          return dimension * (2 / 3);
         }
 
-        function middle(dimension) {
-          return (dimension) / 2;
+        function lowX(dimension) {
+          return dimension * (1 / 3);
         }
 
-        function bottom(dimension) {
-          return (dimension) / 2;
+        function middleX(dimension) {
+          return dimension * (2 / 3);
         }
 
-        function off(dimension) {
-          return dimension * 2;
+        function heighX(dimension) {
+          return dimension * (3 / 3);
+        }
+
+        function noDataX(dimension) {
+          return dimension * (3 / 3);
         }
       }
 
       function sortTopCountriesForce() {
-        var sortTopCountriesStrength = 0.05;
         return {
-          x: d3.forceX(TopCountriesForceX).strength(sortTopCountriesStrength),
-          y: d3.forceY(TopCountriesForceY).strength(sortTopCountriesStrength)
+          x: d3.forceX(TopCountriesForceX).strength(forceStrength),
+          y: d3.forceY(TopCountriesForceY).strength(forceStrength)
         };
 
         function TopCountriesForceX(d) {
@@ -422,32 +371,24 @@ d3.csv("data.csv", // 1.a Connect to the data
       }
     }
 
-    //  updateCircles();
     function createForceSimulationHuman() {
 
-          forceSimulationHuman = d3.forceSimulation()
-            .force("x", forces.center.x)
-            .force("y", forces.center.y)
-            .force('collision',
-              d3.forceCollide()
-              .radius(function(d) {
-                if (d.HumanLoss <= 0) {
-                  return Math.sqrt(100 / Math.PI);
-                } else {
-                  return Math.sqrt(d.HumanLoss / Math.PI) + 2;
-                }
-              }));
+      forceSimulationHuman = d3.forceSimulation()
+        .force("x", forces.center.x)
+        .force("y", forces.center.y)
+        .force('collision',
+          d3.forceCollide().radius(forceCollideHuman));
 
-        forceSimulationHuman.nodes(dataset)
-      .on("tick", function() {
-        circlesHuman
-          .attr("cx", function(d) {
-            return d.x;
-          })
-          .attr("cy", function(d) {
-            return d.y;
-          });
-      });
+      forceSimulationHuman.nodes(dataset)
+        .on("tick", function() {
+          circlesHuman
+            .attr("cx", function(d) {
+              return d.x;
+            })
+            .attr("cy", function(d) {
+              return d.y;
+            });
+        });
     }
 
     function createForceSimulationEco() {
@@ -456,14 +397,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .force("x", forces.center.x)
         .force("y", forces.center.y)
         .force('collision',
-          d3.forceCollide()
-          .radius(function(d) {
-            if (d.EcoLoss <= 0) {
-              return Math.sqrt(100 / Math.PI);
-            } else {
-              return Math.sqrt(d.EcoLoss / Math.PI) + 2;
-            }
-          }));
+          d3.forceCollide().radius(forceCollideEco));
 
       forceSimulationEco.nodes(dataset)
         .on("tick", function() {
@@ -487,47 +421,46 @@ d3.csv("data.csv", // 1.a Connect to the data
 
       function addListener(selector, forces) {
         d3.select(selector).on("click", function() {
-          if (selector == "#Home") {
-            document.getElementById("EcoLoss").checked = false;
-            document.getElementById("HumanLoss").checked = false;
-          } else {}
           updateEcoForces(forces);
-          updateHumanForces(forces);
+          //  updateHumanForces(forces);
         });
       }
+    }
 
-      function updateEcoForces(forces) {
-        forceSimulationEco
-          .force("x", forces.x)
-          .force("y", forces.y)
-          .force('collision',
-            d3.forceCollide()
-            .radius(function(d) {
-              if (d.EcoLoss <= 0) {
-                return Math.sqrt(100 / Math.PI);
-              } else {
-                return Math.sqrt(d.EcoLoss / Math.PI) + 2;
-              }
-            }))
-          .alphaTarget(0.5)
-          .restart();
+    function updateEcoForces(forces) {
+      forceSimulationEco
+        .force("x", forces.x)
+        .force("y", forces.y)
+        .force('collision',
+          d3.forceCollide().radius(forceCollideEco))
+        .alphaTarget(0.5)
+        .restart();
+    }
+
+    function updateHumanForces(forces) {
+      forceSimulationHuman
+        .force("x", forces.x)
+        .force("y", forces.y)
+        .force('collision',
+          d3.forceCollide().radius(forceCollideHuman))
+        .alphaTarget(0.5)
+        .restart();
+    }
+
+    function forceCollideEco(d) {
+      if (d.EcoLoss <= 0) {
+        return Math.sqrt(100 / Math.PI);
+      } else {
+        return Math.sqrt(d.EcoLoss / Math.PI) + 2;
       }
-      function updateHumanForces(forces) {
 
-          forceSimulationHuman
-            .force("x", forces.x)
-            .force("y", forces.y)
-            .force('collision',
-              d3.forceCollide()
-              .radius(function(d) {
-                if (d.HumanLoss <= 0) {
-                  return Math.sqrt(100 / Math.PI);
-                } else {
-                  return Math.sqrt(d.HumanLoss / Math.PI) + 2;
-                }
-              }))
-            .alphaTarget(0.5)
-            .restart();
+    }
+
+    function forceCollideHuman(d) {
+      if (d.HumanLoss <= 0) {
+        return Math.sqrt(100 / Math.PI);
+      } else {
+        return Math.sqrt(d.HumanLoss / Math.PI) + 2;
       }
     }
 
@@ -557,8 +490,11 @@ d3.csv("data.csv", // 1.a Connect to the data
 
     d3.select("#Bar").on("click", function() {
 
-      updateEcoForces(forces.barScatter);
-      updateHumanForces(forces.barScatter);
+      if (document.getElementById("EcoLoss").checked == true) {
+        updateEcoForces(forces.barScatter);
+      } else {
+        updateHumanForces(forces.barScatter);
+      }
 
       bars
         .transition().duration(420)
