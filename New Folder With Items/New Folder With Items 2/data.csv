@@ -1,0 +1,68 @@
+Country,Income,EcoLoss,HumanLoss,EcoTop,HumanTop
+Myanmar,1,0.044067308,216.4386168,0,1
+Samoa,1,0.005163333,70.3230638,0,1
+Azerbaijan,1,0,0.066862412,0,0
+Australia,2,,2.79127468,0,0
+Bahrain,2,,0,0,0
+Bangladesh,1,,4.128268688,0,0
+Armenia,1,0.00126,0,0,0
+Bhutan,1,0.011111778,2.580204299,0,0
+Brunei Darussalam,2,,0,0,0
+Cambodia,1,0.404412923,3.974068371,1,0
+Lao People's Democratic Rep. (The),1,0.051858375,0,1,0
+American Samoa,1,0,46.51474586,0,1
+China,1,,6.2226495,0,0
+Cook Islands,3,0,0,0,0
+Cyprus,2,2.71538E-05,0.289262796,0,0
+Pakistan,1,0.0422653,40.94469573,0,1
+French Polynesia,2,0,0.287219315,0,0
+Georgia,1,,1.072447137,0,0
+Kiribati,1,0.000715,0,0,0
+Guam,2,0,0,0,0
+India,1,,1.908950904,0,0
+Indonesia,1,,4.524024993,0,0
+Iran (Islamic Republic of),1,0.010540571,0,0,0
+Iraq,1,,0.363447745,0,0
+Israel,2,,0.502323342,0,0
+Nepal,0,0.023140556,31.79171665,0,1
+Kazakhstan,1,1.39231E-05,0.252583272,0,0
+Solomon Islands,1,0.016187889,21.45384484,1,1
+Democratic People's Rep. of Korea (The),0,,0,0,0
+Afghanistan,0,,13.32854822,1,1
+Kuwait,2,0,0,0,0
+Kyrgyzstan,1,0.000428833,0,0,0
+Japan,2,,13.05345544,1,1
+Lebanon,1,0.0000203,0.084553465,0,0
+Malaysia,1,0.000843,0.537765683,0,0
+Maldives,1,0.0012786,0.820226288,0,0
+Mongolia,1,0.0000227,2.840857551,0,0
+Oman,2,,3.017394821,0,0
+Nauru,2,,0,0,0
+Timor-Leste,1,0.017440583,1.847725627,1,0
+New Caledonia,3,0,0,0,0
+Vanuatu,1,0.0009287,6.763892939,0,0
+New Zealand,2,0.000067,3.295300542,0,0
+Niue,3,0,0,0,0
+Micronesia (Federated States of),1,0,0,0,0
+Marshall Islands,1,0.000665,0,0,0
+Palau,1,0.0055254,0,0,0
+Fiji,1,0.0046097,8.617858002,1,1
+Papua New Guinea,1,0.002023727,5.5663326,0,0
+Philippines (The),1,,0,0,0
+Jordan,1,0.0127213,0,1,0
+Qatar,2,,0,0,0
+Saudi Arabia,2,,1.037552098,0,0
+Singapore,2,,0,0,0
+Viet Nam,1,0.012680333,0,1,0
+Syrian Arab Republic (The),1,,0,0,0
+Tajikistan,1,,2.721700117,0,0
+Thailand,1,,2.310187287,0,0
+Tokelau,3,0,0,0,0
+Tonga,1,0.003651875,7.409433617,0,0
+United Arab Emirates,2,,0,0,0
+Turkey,1,0.000116909,1.023237442,0,0
+Turkmenistan,1,,0,0,0
+Tuvalu,1,0,0,0,0
+Uzbekistan,1,0,0.03408386,0,0
+Sri Lanka,1,0.004002846,7.883684131,0,1
+Yemen,1,0.000813333,0,0,0
