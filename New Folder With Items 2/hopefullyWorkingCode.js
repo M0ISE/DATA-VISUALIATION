@@ -66,8 +66,7 @@ d3.csv("data.csv", // 1.a Connect to the data
 
     createSVGControlStrip();
     makeHomeButton();
-    makeSelectionEcoButton();
-    makeSelectionHumanButton();
+    makeSelectionButton();
     makeIncomeButton();
     makeTopButton();
     makeLegendButton();
@@ -104,8 +103,6 @@ d3.csv("data.csv", // 1.a Connect to the data
             .attr("filter", "null");
           svgLegend
             .attr("filter", "null");
-          svgControlStrip
-            .attr("filter", "null");
         });
 
       svgEco
@@ -113,8 +110,6 @@ d3.csv("data.csv", // 1.a Connect to the data
       svgHuman
         .attr("filter", "url(#blur)");
       svgLegend
-        .attr("filter", "url(#blur)");
-      svgControlStrip
         .attr("filter", "url(#blur)");
     }
 
@@ -132,7 +127,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("fill", "rgba(10, 10, 10, 0.2)")
         .attr("class", "SplahScreenBackground");
 
-      // Adding the Splash TITLE TEXT
+      // Adding the legend TITLE TEXT
       svgSplash
         .append("text")
         .attr("class", "LegendECOText")
@@ -150,7 +145,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("class", "LegendECOText")
         .attr('x', 50)
         .attr('y', height / 1.5 + 60)
-        .text("Disasters really costing us?")
+        .text("Disaster really costing us?")
         .style("font-size", 64)
         .style("font-weight", "bold")
         .style("fill", "rgb(10,10,10)")
@@ -234,25 +229,8 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("height", 42)
         .attr("fill", "rgba(150, 150, 150, 0.8)")
         .attr("class", "buttonHome unselectable")
-        .on('click', function() {
-
-          updateEcoForces(forces.center);
-          updateHumanForces(forces.center);
-
-          svgSplash
-            .transition()
-            .duration(500)
-            .ease(d3.easePolyInOut)
-            .style("opacity", 100)
-            .attr('transform', "translate(0," + -((height + paddingLarge) * 3) + ")");
-
-          svgEco
-            .attr("filter", "url(#blur)");
-          svgHuman
-            .attr("filter", "url(#blur)");
-          svgLegend
-            .attr("filter", "url(#blur)");
-
+        .on('click', function(d) {
+          return updateEcoForces(forces.center) || updateHumanForces(forces.center);
         });
 
       // adding the House icon
@@ -263,31 +241,12 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("height", 22)
         .attr("x", paddingControlStrip + 10)
         .attr("y", paddingControlStrip + 10)
-        .on('click', function() {
-
-          updateEcoForces(forces.center);
-          updateHumanForces(forces.center);
-
-          svgSplash
-            .transition()
-            .duration(500)
-            .ease(d3.easePolyInOut)
-            .style("opacity", 100)
-            .attr('transform', "translate(0," + -((height + paddingLarge) * 3) + ")");
-
-          svgEco
-            .attr("filter", "url(#blur)");
-          svgHuman
-            .attr("filter", "url(#blur)");
-          svgLegend
-            .attr("filter", "url(#blur)");
-          svgControlStrip
-            .attr("filter", "url(#blur)");
-
+        .on('click', function(d) {
+          return updateEcoForces(forces.center) || updateHumanForces(forces.center);
         });
     }
 
-    function makeSelectionEcoButton() {
+    function makeSelectionButton() {
       svgControlStrip
         .selectAll("legend")
         .data(dataset)
@@ -297,101 +256,61 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("ry", 4)
         .attr("x", paddingControlStrip * 2 + 42)
         .attr("y", paddingControlStrip)
-        .attr("width", 150)
+        .attr("width", 82)
         .attr("height", 42)
         .attr("fill", "rgba(72,224,154,0.6)")
-        .attr("class", "ButtonSelectEcoRect unselectable")
+        .attr("class", "ButtonSelectRect unselectable")
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
 
             svgEco
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge)) + ")");
 
             svgHuman
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 0)
               .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge) * 2) + ")");
 
-
-            d3.selectAll(".ButtonSelectEcoRect")
+            d3.selectAll(".ButtonSelectText")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0.6)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
+              .text("Eco");
 
-            d3.selectAll(".ButtonSelectEcoText")
+            d3.selectAll(".ButtonSelectRect")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
+              .attr("fill", "rgba(72,224,154,0.6)");
 
           } else {
             svgEco
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 0)
               .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge)) + ")");
 
-
             svgHuman
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
 
-
-            d3.selectAll(".ButtonSelectEcoRect")
+            d3.selectAll(".ButtonSelectText")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
+              .text("Human");
 
-            d3.selectAll(".ButtonSelectEcoText")
+            d3.selectAll(".ButtonSelectRect")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(229,16,62,0.9)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255,255,255)");
+              .attr("fill", "rgba(229,16,62,0.6)");
           }
         });
 
@@ -402,321 +321,63 @@ d3.csv("data.csv", // 1.a Connect to the data
         .append("text")
         .attr('x', paddingControlStrip * 2 + 42 + 10)
         .attr('y', paddingControlStrip + 22)
-        .text("Economic Loss")
+        .text("Eco")
         .style("font-size", 16)
         .style("font-weight", "bold")
         .style("fill", "rgb(255,255,255)")
         .attr('alignment-baseline', 'middle')
-        .attr("class", "ButtonSelectEcoText unselectable")
+        .attr("class", "ButtonSelectText unselectable")
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
 
             svgEco
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge)) + ")");
 
             svgHuman
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 0)
               .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge) * 2) + ")");
 
-
-            d3.selectAll(".ButtonSelectEcoRect")
+            d3.selectAll(".ButtonSelectText")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0.6)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
+              .text("Eco");
 
-            d3.selectAll(".ButtonSelectEcoText")
+            d3.selectAll(".ButtonSelectRect")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
+              .attr("fill", "rgba(72,224,154,0.6)");
 
           } else {
             svgEco
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 0)
               .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge)) + ")");
 
-
             svgHuman
               .transition()
-              .duration(500)
+              .duration(1000)
               .ease(d3.easePolyInOut)
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
 
-
-            d3.selectAll(".ButtonSelectEcoRect")
+            d3.selectAll(".ButtonSelectText")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
+              .text("Human");
 
-            d3.selectAll(".ButtonSelectEcoText")
+            d3.selectAll(".ButtonSelectRect")
               .transition()
-              .duration(500)
               .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(229,16,62,0.9)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255,255,255)");
-          }
-        });
-    }
-
-    function makeSelectionHumanButton() {
-      svgControlStrip
-        .selectAll("legend")
-        .data(dataset)
-        .enter()
-        .append("rect")
-        .attr("rx", 4)
-        .attr("ry", 4)
-        .attr("x", paddingControlStrip * 3 + 42 + 150)
-        .attr("y", paddingControlStrip)
-        .attr("width", 130)
-        .attr("height", 42)
-        .attr("fill", "rgba(72,224,154,0)")
-        .attr("stroke", "rgba(150, 150, 150, 0.8)")
-        .attr("stroke-width", 2)
-        .attr("class", "ButtonSelectHumanRect unselectable")
-        .on('click', function() {
-          if (svgEco.style("opacity") == "0") {
-
-            svgEco
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100)
-              .attr('transform', "translate(0," + -((height + paddingLarge)) + ")");
-
-            svgHuman
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0)
-              .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge) * 2) + ")");
-
-
-            d3.selectAll(".ButtonSelectEcoRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0.6)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectEcoText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-
-          } else {
-            svgEco
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0)
-              .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge)) + ")");
-
-
-            svgHuman
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100)
-              .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
-
-
-            d3.selectAll(".ButtonSelectEcoRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectEcoText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(229,16,62,0.9)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255,255,255)");
-          }
-        });
-
-      svgControlStrip
-        .selectAll("legend")
-        .data(dataset)
-        .enter()
-        .append("text")
-        .attr('x', paddingControlStrip * 3 + 42 + 10 + 150)
-        .attr('y', paddingControlStrip + 22)
-        .text("Human Loss")
-        .style("font-size", 16)
-        .style("font-weight", "bold")
-        .style("fill", "rgb(150, 150, 150, 0.8)")
-        .attr('alignment-baseline', 'middle')
-        .attr("class", "ButtonSelectHumanText unselectable")
-        .on('click', function() {
-          if (svgEco.style("opacity") == "0") {
-
-            svgEco
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100)
-              .attr('transform', "translate(0," + -((height + paddingLarge)) + ")");
-
-            svgHuman
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0)
-              .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge) * 2) + ")");
-
-
-            d3.selectAll(".ButtonSelectEcoRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0.6)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectEcoText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-
-          } else {
-            svgEco
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0)
-              .attr('transform', "translate(" + -wayOffScreen + "," + -((height + paddingLarge)) + ")");
-
-
-            svgHuman
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100)
-              .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
-
-
-            d3.selectAll(".ButtonSelectEcoRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(72,224,154,0)")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
-            d3.selectAll(".ButtonSelectEcoText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgba(150, 150, 150, 0.8)");
-
-            d3.selectAll(".ButtonSelectHumanRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(229,16,62,0.9)")
-              .attr("stroke", "rgba(150, 150, 150, 0)")
-              .attr("stroke-width", 0);
-
-            d3.selectAll(".ButtonSelectHumanText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255,255,255)");
+              .attr("fill", "rgba(229,16,62,0.6)");
           }
         });
     }
@@ -729,7 +390,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .append("rect")
         .attr("rx", 4)
         .attr("ry", 4)
-        .attr("x", (width + paddingLarge) - paddingControlStrip - paddingControlStrip * 2 - 95 - 135 - 95)
+        .attr("x", paddingControlStrip * 3 + 42 + 82)
         .attr("y", paddingControlStrip)
         .attr("width", 95)
         .attr("height", 42)
@@ -744,7 +405,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .enter()
         .append("text")
         .attr("class", "LegendECOText")
-        .attr('x', (width + paddingLarge + 15) - paddingControlStrip - paddingControlStrip * 2 - 95 - 135 - 95)
+        .attr('x', paddingControlStrip * 3 + 42 + 82 + 13)
         .attr('y', paddingControlStrip + 22)
         .text("Income")
         .style("font-size", 16)
@@ -765,7 +426,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .append("rect")
         .attr("rx", 4)
         .attr("ry", 4)
-        .attr("x", (width + paddingLarge) - paddingControlStrip - paddingControlStrip - 95 - 135)
+        .attr("x", paddingControlStrip * 4 + 42 + 82 + 95)
         .attr("y", paddingControlStrip)
         .attr("width", 135)
         .attr("height", 42)
@@ -780,7 +441,7 @@ d3.csv("data.csv", // 1.a Connect to the data
         .enter()
         .append("text")
         .attr("class", "LegendECOText")
-        .attr("x", (width + paddingLarge + 15) - paddingControlStrip - paddingControlStrip - 95 - 135)
+        .attr("x", paddingControlStrip * 4 + 42 + 82 + 95 + 13)
         .attr('y', paddingControlStrip + 22)
         .text("Top Affected")
         .style("font-size", 16)
@@ -801,60 +462,16 @@ d3.csv("data.csv", // 1.a Connect to the data
         .append("rect")
         .attr("rx", 4)
         .attr("ry", 4)
-        .attr("x", (width + paddingLarge) - paddingControlStrip - 95)
+        .attr("x", paddingControlStrip * 5 + 42 + 82 + 95 + 135)
         .attr("y", paddingControlStrip)
         .attr("width", 95)
         .attr("height", 42)
-        .attr("fill", "transparent")
-        .attr("stroke", "rgba(150, 150, 150, 0.8)")
-        .attr("stroke-width", 2)
-        .attr("class", "ButtonLegendRect unselectable")
-        .on('click', function() {
-
+        .attr("fill", "rgba(150, 150, 150, 0.8)")
+        .on('click', function(d) {
           if (svgLegend.style("opacity") == 0) {
-
-            svgLegend
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100);
-
-            d3.selectAll(".ButtonLegendText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-
-            d3.selectAll(".ButtonLegendRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 0);
-
+            return svgLegend.transition().duration(1000).ease(d3.easePolyInOut).style("opacity", 100);
           } else {
-
-            svgLegend
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0);
-
-            d3.selectAll(".ButtonLegendText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(150, 150, 150)");
-
-            d3.selectAll(".ButtonLegendRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "transparent")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
+            return svgLegend.transition().ease(d3.easePolyInOut).style("opacity", 0.00001);
           }
         });
 
@@ -864,60 +481,19 @@ d3.csv("data.csv", // 1.a Connect to the data
         .enter()
         .append("text")
         .attr("class", "LegendECOText")
-        .attr("x", (width + paddingLarge + 15) - paddingControlStrip - 95)
+        .attr("x", paddingControlStrip * 5 + 42 + 82 + 95 + 13 + 135)
         .attr('y', paddingControlStrip + 22)
         .text("Legend")
         .style("font-size", 16)
         .style("font-weight", "bold")
-        .style("fill", "rgb(150, 150, 150)")
+        .style("fill", "rgb(255,255,255)")
         .attr('alignment-baseline', 'middle')
-        .attr("class", "ButtonLegendText")
-        .on('click', function() {
-
+        .attr("class", "ButtonText unselectable")
+        .on('click', function(d) {
           if (svgLegend.style("opacity") == 0) {
-
-            svgLegend
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 100);
-
-            d3.selectAll(".ButtonLegendText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(255, 255, 255)");
-
-
-            d3.selectAll(".ButtonLegendRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 0);
-
+            return svgLegend.transition().duration(1000).ease(d3.easePolyInOut).style("opacity", 100);
           } else {
-
-            svgLegend
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("opacity", 0);
-
-            d3.selectAll(".ButtonLegendText")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .style("fill", "rgb(150, 150, 150)");
-
-            d3.selectAll(".ButtonLegendRect")
-              .transition()
-              .duration(500)
-              .ease(d3.easePolyInOut)
-              .attr("fill", "transparent")
-              .attr("stroke", "rgba(150, 150, 150, 0.8)")
-              .attr("stroke-width", 2);
-
+            return svgLegend.transition().ease(d3.easePolyInOut).style("opacity", 0);
           }
         });
     }
@@ -993,15 +569,15 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("stroke-width", 3)
         .on("mouseover", function(d) {
           console.log(d.Country);
-          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.EcoLoss) + "% of global GDP lost from Natural Disasters");
+          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.EcoLoss) + " % of Global GDP, Lost from Natural Disasters");
         })
         .on("mouseout", function(d) {
           updateCountryInfo("...");
         })
-        .call(d3.drag()
-          .on("start", dragstartedEco)
-          .on("drag", draggedEco)
-          .on("end", dragendedEco));
+        .call(d3.drag() // Drag Function based off of code from https://bl.ocks.org/HarryStevens/f636199a46fc4b210fbca3b1dc4ef372
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
 
       function updateCountryInfo(number) {
         d3.select(".EcoHoverText")
@@ -1009,7 +585,7 @@ d3.csv("data.csv", // 1.a Connect to the data
       }
     }
 
-    function dragstartedEco(d) {
+    function dragstarted(d) {
       if (!d3.event.active)
         forceSimulationEco
         .alphaTarget(0.3)
@@ -1018,12 +594,12 @@ d3.csv("data.csv", // 1.a Connect to the data
       d.fy = d.y;
     }
 
-    function draggedEco(d) {
+    function dragged(d) {
       d.fx = d3.event.x;
       d.fy = d3.event.y;
     }
 
-    function dragendedEco(d) {
+    function dragended(d) {
       if (!d3.event.active)
         forceSimulationEco
         .alphaTarget(0.3);
@@ -1190,15 +766,15 @@ d3.csv("data.csv", // 1.a Connect to the data
         }
 
         function middleX(dimension) {
-          return (dimension - legendWidth) * (1 / 2);
+          return dimension * (1 / 2);
         }
 
         function heighX(dimension) {
-          return dimension - paddingChart - legendWidth;
+          return dimension - paddingChart;
         }
 
         function noDataX(dimension) {
-          return dimension - paddingChart - legendWidth;
+          return dimension - paddingChart;
         }
       }
 
@@ -1295,42 +871,20 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("stroke-width", 3)
         .on("mouseover", function(d) {
           console.log(d.Country);
-          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.HumanLoss) + " Deaths from Natural Disasters");
+          updateCountryInfo(d.Country + " had " + d3.format(",.3r")(d.HumanLoss) + " deaths from Natural Disasters");
         })
         .on("mouseout", function(d) {
           updateCountryInfo("...");
         })
         .call(d3.drag() // Drag Function based off of code from https://bl.ocks.org/HarryStevens/f636199a46fc4b210fbca3b1dc4ef372
-          .on("start", dragstartedHuman)
-          .on("drag", draggedHuman)
-          .on("end", dragendedHuman));
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
 
       function updateCountryInfo(number) {
         d3.select(".HumanHoverText")
           .text(number);
       }
-    }
-
-    function dragstartedHuman(d) {
-      if (!d3.event.active)
-        forceSimulationHuman
-        .alphaTarget(0.3)
-        .restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    function draggedHuman(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    }
-
-    function dragendedHuman(d) {
-      if (!d3.event.active)
-        forceSimulationHuman
-        .alphaTarget(0.3);
-      d.fx = null;
-      d.fy = null;
     }
 
     function createForceSimulationHuman() {
@@ -1494,15 +1048,15 @@ d3.csv("data.csv", // 1.a Connect to the data
         }
 
         function middleX(dimension) {
-          return (dimension - legendWidth) * (1 / 2);
+          return dimension * (1 / 2);
         }
 
         function heighX(dimension) {
-          return dimension - paddingChart - legendWidth;
+          return dimension - paddingChart;
         }
 
         function noDataX(dimension) {
-          return dimension - paddingChart - legendWidth;
+          return dimension - paddingChart;
         }
       }
 
@@ -1607,7 +1161,7 @@ d3.csv("data.csv", // 1.a Connect to the data
       .text("Legend")
       .style("font-size", 20)
       .style("font-weight", "bold")
-      .style("fill", "rgb(100,100,100)")
+      .style("fill", "rgb(10,10,10)")
       .attr('alignment-baseline', 'middle')
       .attr("class", "legendMainTitle unselectable");
 

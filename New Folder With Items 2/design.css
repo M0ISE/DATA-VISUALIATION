@@ -1,0 +1,99 @@
+#reset, #IncomeBracket, #TopCountries {
+  display: inline-block;
+  background-color: #a6a6a6;
+  color: white;
+  padding-left: 32px;
+  padding-right: 32px;
+  font-weight: 700;
+  border: 1px solid rgba(#cccccc, 0);
+  border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+
+#reset:hover, #IncomeBracket:hover, #TopCountries:hover {
+  background-color: #ffffff;
+  color: #cccccc;
+  border: 1px solid #cccccc;
+  border-radius: 2px;
+}
+
+#HoverInfo {
+  text-align: middle;
+  color: white;
+  padding: 22px;
+  cursor: pointer;
+  width: 63%;
+  background-color: #c7c7c7;
+  font-weight: 700;
+}
+
+#content {
+  position: relative;
+  color: #4e4e4e;
+}
+
+#footer {
+  position: static;
+  width: 100%;
+  background-color: #c4c4c4;
+  color: white;
+  text-align: left;
+}
+
+#Bar {
+  display: inline-block;
+  background-color: #cccccc;
+  color: white;
+  padding-left: 32px;
+  padding-right: 32px;
+  font-weight: 700;
+  border: 1px solid rgba(#cccccc, 0);
+  border-radius: 2px;
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#heroText {
+  font-size: 32px;
+}
+
+#makingSpace {
+  padding-top: 64px;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select:none;
+  user-select: none
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: 700;
+  color: #393939;
+}
+
+h2 {
+  color: #393939;
+  text-align: left;
+  font-size: 32px;
+}
+
+h3 {
+  font-weight: 700;
+}
+
+body {
+  margin: auto;
+  padding-top: 50px;
+  position: relative;
+  width: 1000px;
+  font-family: 'Montserrat', sans-serif;
+}
