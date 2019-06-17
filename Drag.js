@@ -87,3 +87,32 @@
     d.size < 3 ? d.radius = 3 : d.radius = d.size;
     return d;
   }
+
+  var filter = svg.append("defs")
+    .append("filter")
+      .attr("id", "blur")
+    .append("feGaussianBlur")
+      .attr("stdDeviation", 5);
+
+  d3.select("body").append("input")
+      .attr("type", "range")
+      .attr("min", 0)
+      .attr("max", 100)
+      .attr("value", 25)
+      .on("change", blur);
+
+  var image = new Image;
+  image.src = "octocat.jpg";
+  image.onload = load;
+
+  function load() {
+    svg.append("image")
+        .attr("xlink:href", this.src)
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("filter", "url(#blur)");
+  }
+
+  function blur() {
+    filter.attr("stdDeviation", this.value / 5);
+  }

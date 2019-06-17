@@ -16,7 +16,7 @@ d3.csv("data.csv", // 1.a Connect to the data
 
     var numDataPoints = dataset.length;
 
-    var width = 700,
+    var width = 1000,
       height = 600,
       controlStripHeight = 100,
       wayOffScreen = 2000,
@@ -48,51 +48,21 @@ d3.csv("data.csv", // 1.a Connect to the data
       forceSimulationEco,
       forceSimulationHuman;
 
-      /////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////  Splah Screen   ///  Splah Screen   ///  Splah Screen
-      ////////////////////////////////////////////////////////////////////
-
-createSVGSplash();
-
-      function createSVGSplash() {
-        svgSplash = d3.select("#SplahScreen")
-          .append("svg")
-          .attr("width", width + paddingLarge)
-          .attr("height", height + paddingLarge)
-          .attr('transform', "translate(0," + -((height + paddingLarge)*3) + ")");
-
-      }
-
-      function SplahScreenContent() {
-
-        // Adding the legend Background
-        svgSplash
-          .append("rect")
-          .attr("x", 0)
-          .attr("y", 0)
-          .attr("width",  width + paddingLarge)
-          .attr("height", height + paddingLarge)
-          .attr("fill", "rgba(10, 10, 10, 0.1)")
-          .attr("class", "legendBackground");
-
-        // Adding the legend TITLE TEXT
-        svgSplash
-          .append("text")
-          .attr("class", "LegendECOText")
-          .attr('x', (width - legendWidth) + paddingLarge)
-          .attr('y', legendPadding + 18)
-          .text("Legend")
-          .style("font-size", 20)
-          .style("font-weight", "bold")
-          .style("fill", "rgb(10,10,10)")
-          .attr('alignment-baseline', 'middle')
-          .attr("class", "legendMainTitle unselectable");
-
-      }
-
     /////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////  CONTROLSTRIP   ///  CONTROLSTRIP   ///  CONTROLSTRIP
+    /////////////////////////////////////////////////////////////////////  Splah Screen   ///  Splah Screen   ///  Splah Screen
     ////////////////////////////////////////////////////////////////////
+
+    createSVGEco();
+    mayTheEcoForceBe();
+    makeTheEcoCircles();
+    createForceSimulationEco();
+    EcoHoverText();
+
+    createSVGHuman();
+    mayTheHumanForceBe();
+    makeTheHumanCircles();
+    createForceSimulationHuman();
+    HumanHoverText();
 
     createSVGControlStrip();
     makeHomeButton();
@@ -100,6 +70,141 @@ createSVGSplash();
     makeIncomeButton();
     makeTopButton();
     makeLegendButton();
+
+    createSVGLegend();
+
+    createSVGSplash();
+    SplahScreenContent();
+
+    var filter = svgEco.append("defs")
+      .append("filter")
+      .attr("id", "blur")
+      .append("feGaussianBlur")
+      .attr("stdDeviation", 10);
+
+    function createSVGSplash() {
+      svgSplash = d3.select("#SplahScreen")
+        .append("svg")
+        .attr("width", width + paddingLarge)
+        .attr("height", height + paddingLarge)
+        .attr('transform', "translate(0," + -((height + paddingLarge) * 3) + ")")
+        .on('click', function() {
+
+          svgSplash
+            .transition()
+            .duration(2000)
+            .ease(d3.easePolyInOut)
+            .style("opacity", 0)
+            .attr('transform', "translate(0," + -wayOffScreen * 4 + ")");
+
+          svgEco
+            .attr("filter", "null");
+          svgHuman
+            .attr("filter", "null");
+          svgLegend
+            .attr("filter", "null");
+        });
+
+      svgEco
+        .attr("filter", "url(#blur)");
+      svgHuman
+        .attr("filter", "url(#blur)");
+      svgLegend
+        .attr("filter", "url(#blur)");
+    }
+
+    function SplahScreenContent() {
+
+      // Adding the legend Background
+      svgSplash
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width + paddingLarge)
+        .attr("height", height + paddingLarge)
+        .attr("rx", 16)
+        .attr("ry", 16)
+        .attr("fill", "rgba(10, 10, 10, 0.2)")
+        .attr("class", "SplahScreenBackground");
+
+      // Adding the legend TITLE TEXT
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5)
+        .text("Just how much are Natural")
+        .style("font-size", 64)
+        .style("font-weight", "bold")
+        .style("fill", "rgb(10,10,10)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5 + 60)
+        .text("Disaster really costing us?")
+        .style("font-size", 64)
+        .style("font-weight", "bold")
+        .style("fill", "rgb(10,10,10)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5 + 80 + paddingSmall)
+        .text("When it comes to evaluating the impacts of natural disasters, often only the ")
+        .style("font-size", 20)
+        .style("font-weight", "bold")
+        .style("fill", "rgb(100,100,100)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5 + 80 + paddingSmall + 25)
+        .text("economic costs are considered. But what about the impacts on human life ")
+        .style("font-size", 20)
+        .style("font-weight", "bold")
+        .style("fill", "rgb(100,100,100)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5 + 80 + paddingSmall + 50)
+        .text(" and human losses experienced?")
+        .style("font-size", 20)
+        .style("font-weight", "bold")
+        .style("fill", "rgb(100,100,100)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+      svgSplash
+        .append("text")
+        .attr("class", "LegendECOText")
+        .attr('x', 50)
+        .attr('y', height / 1.5 + 80 + paddingSmall + 100)
+        .text("Press anywhere to get started")
+        .style("font-size", 12)
+        .style("font-weight", "bold")
+        .style("fill", "rgba(38, 81, 208,0.8)")
+        .attr('alignment-baseline', 'middle')
+        .attr("class", "SplahScreenTitle unselectable");
+
+    }
+
+    /////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////  CONTROLSTRIP   ///  CONTROLSTRIP   ///  CONTROLSTRIP
+    ////////////////////////////////////////////////////////////////////
 
     function createSVGControlStrip() {
       svgControlStrip = d3.select("#controlStrip")
@@ -197,15 +302,15 @@ createSVGSplash();
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
 
-              d3.selectAll(".ButtonSelectText")
-                .transition()
-                .ease(d3.easePolyInOut)
-                .text("Human");
+            d3.selectAll(".ButtonSelectText")
+              .transition()
+              .ease(d3.easePolyInOut)
+              .text("Human");
 
-              d3.selectAll(".ButtonSelectRect")
-                .transition()
-                .ease(d3.easePolyInOut)
-                .attr("fill", "rgba(229,16,62,0.6)");
+            d3.selectAll(".ButtonSelectRect")
+              .transition()
+              .ease(d3.easePolyInOut)
+              .attr("fill", "rgba(229,16,62,0.6)");
           }
         });
 
@@ -264,15 +369,15 @@ createSVGSplash();
               .style("opacity", 100)
               .attr('transform', "translate(0," + -((height + paddingLarge) * 2) + ")");
 
-              d3.selectAll(".ButtonSelectText")
-                .transition()
-                .ease(d3.easePolyInOut)
-                .text("Human");
+            d3.selectAll(".ButtonSelectText")
+              .transition()
+              .ease(d3.easePolyInOut)
+              .text("Human");
 
-              d3.selectAll(".ButtonSelectRect")
-                .transition()
-                .ease(d3.easePolyInOut)
-                .attr("fill", "rgba(229,16,62,0.6)");
+            d3.selectAll(".ButtonSelectRect")
+              .transition()
+              .ease(d3.easePolyInOut)
+              .attr("fill", "rgba(229,16,62,0.6)");
           }
         });
     }
@@ -397,13 +502,6 @@ createSVGSplash();
     /////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////  HUMAN   ///  HUMAN   ///  HUMAN
     /////////////////////////////////////////////////////////////////////
-
-    createSVGEco();
-    mayTheEcoForceBe();
-    makeTheEcoCircles();
-    createForceSimulationEco();
-    EcoHoverText();
-
 
     function createSVGEco() {
       svgEco = d3.select("#EcoContent")
@@ -708,12 +806,6 @@ createSVGSplash();
     /////////////////////////////////////////////////////////////////////  HUMAN   ///  HUMAN   ///  HUMAN
     /////////////////////////////////////////////////////////////////////
 
-    createSVGHuman();
-    mayTheHumanForceBe();
-    makeTheHumanCircles();
-    createForceSimulationHuman();
-    HumanHoverText();
-
     function createSVGHuman() {
       svgHuman = d3.select("#HumanContent")
         .append("svg")
@@ -1002,7 +1094,6 @@ createSVGSplash();
     /////////////////////////////////////////////////////////////////////  LEGEND   ///  LEGEND   ///  LEGEND
     /////////////////////////////////////////////////////////////////////
 
-    createSVGLegend();
 
     function createSVGLegend() {
       svgLegend = d3.select("#theLegend")
