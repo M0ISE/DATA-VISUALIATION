@@ -258,7 +258,7 @@ d3.csv("data.csv", // 1.a Connect to the data
       // adding the House icon
       svgControlStrip
         .append("svg:image")
-        .attr("href", "/house.svg")
+        .attr("href", "house.svg")
         .attr("width", 22)
         .attr("height", 22)
         .attr("x", paddingControlStrip + 10)
@@ -303,6 +303,9 @@ d3.csv("data.csv", // 1.a Connect to the data
         .attr("class", "ButtonSelectEcoRect unselectable")
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
+
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
 
             svgEco
               .transition()
@@ -349,6 +352,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
 
           } else {
+
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -411,6 +418,9 @@ d3.csv("data.csv", // 1.a Connect to the data
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
 
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -456,6 +466,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
 
           } else {
+
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -522,6 +536,9 @@ d3.csv("data.csv", // 1.a Connect to the data
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
 
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -567,6 +584,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
 
           } else {
+
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -629,6 +650,9 @@ d3.csv("data.csv", // 1.a Connect to the data
         .on('click', function() {
           if (svgEco.style("opacity") == "0") {
 
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
@@ -674,6 +698,10 @@ d3.csv("data.csv", // 1.a Connect to the data
 
 
           } else {
+
+            updateEcoForces(forces.center);
+            updateHumanForces(forces.center);
+
             svgEco
               .transition()
               .duration(500)
